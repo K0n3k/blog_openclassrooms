@@ -1,0 +1,33 @@
+{% block main %}
+<div class="container">
+{% include 'Admins/DashboardMenu.twig' %}
+<table class="table table-striped table-hover">
+<thead>
+<tr>
+        <th scope="col"> id </td>
+        <th scope="col"> idBlogpost </td>
+        <th scope="col"> idUser </td>
+        <th scope="col"> firstname </td>
+        <th scope="col"> lastname </td>
+        <th scope="col"> commentary </td>
+        <th scope="col"> date </td>
+        <th scope="col"> isValidated </td>
+    </tr>
+</thead>
+<tbody>
+	{% for commentary in commentaries %}
+    <tr>
+        <td> {{ commentary.id }} </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.idBlogpost }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.idUser }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.firstname }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.lastname }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.commentary }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.date }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ commentary.isValidated }}"> </td>
+    </tr>
+	{% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

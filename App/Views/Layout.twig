@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title>{{ page_title }}</title>
+		<link rel="stylesheet" href="/Styles/bootstrap.min.css">
+		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon.png">
+	</head>
+
+	<body class="theme-dark container">
+		<div
+			class="grid-wrapper sidebar-bg bg1">
+
+			<!-- BOF HEADER -->
+			{% block header %}
+				{% include 'Parts/header.twig' %}
+			{% endblock %}
+			<!-- EOF HEADER -->
+
+			<!-- BOF MAIN -->
+			
+
+				<!-- BOF MAIN-BODY -->
+				{% block main %}{% endblock %}
+				<!-- EOF MAIN -->
+
+		</div>
+		<!-- END WRAPPER -->
+
+		<script src="/Js/bootstrap.bundle.min.js"></script>
+	</body>
+
+</html>

@@ -1,0 +1,35 @@
+{% block main %}
+<div class="container">
+{% include 'Admins/DashboardMenu.twig' %}
+<table class="table table-striped table-hover">
+<thead>
+<tr>
+        <th scope="col"> id </td>
+        <th scope="col"> idAuthor </td>
+        <th scope="col"> title </td>
+        <th scope="col"> slug </td>
+        <th scope="col"> chapo </td>
+        <th scope="col"> content </td>
+        <th scope="col"> publishedDate </td>
+        <th scope="col"> lastUpdate </td>
+        <th scope="col"> isPublished </td>
+    </tr>
+</thead>
+<tbody>
+	{% for post in posts %}
+    <tr>
+        <td> {{ post.id }} </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.idAuthor }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.title }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.slug }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.chapo }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.content }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.publishedDate }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.lastUpdate }}"> </td>
+        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.isPublished }}"> </td>
+    </tr>
+	{% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
