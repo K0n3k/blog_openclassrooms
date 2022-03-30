@@ -11,8 +11,7 @@ class Controller {
     protected $twig;    
 
     public function __construct(
-        protected array $params,
-        protected string $method, 
+        protected array $server,
         string $page_title){
         
         $this->loader = new FilesystemLoader(dirname(__DIR__).DIRECTORY_SEPARATOR.'Views'.DIRECTORY_SEPARATOR);
