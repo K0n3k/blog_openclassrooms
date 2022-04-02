@@ -3,6 +3,7 @@
 use App\Router\Router;
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+header("Access-Control-Allow-Origin: *");
 
 $server["REQUEST_URI"] = $_SERVER["REQUEST_URI"];
 $server["REQUEST_METHOD"] = $_SERVER["REQUEST_METHOD"];

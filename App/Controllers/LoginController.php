@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\LoginModel;
 
 class LoginController extends Controller {
     public function render() {
-        if ($this->server["method"] === "GET") {
+        if (!array_key_exists("parameters", $this->server)) {
             echo $this->twig->render('Login.twig');
-        }
-        if ($this->server["method"] === "POST") {
-            echo $this->twig->render('Login.twig');
+        } else {
+            $login = new LoginModel();
+            dd($login);
         }
         
     }
