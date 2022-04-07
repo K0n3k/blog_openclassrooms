@@ -8,11 +8,12 @@ use Twig\Loader\FilesystemLoader;
 class Controller {
 
     protected $loader;
-    protected $twig;    
+    protected $twig; 
 
     public function __construct(
         protected array $server,
-        string $page_title){
+        string $page_title,
+        protected $router){
         
         $this->loader = new FilesystemLoader(dirname(__DIR__).DIRECTORY_SEPARATOR.'Views'.DIRECTORY_SEPARATOR);
         $this->twig = new Environment($this->loader);

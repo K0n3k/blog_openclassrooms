@@ -64,13 +64,13 @@ Class Router {
             ],
         };
 
-        $controller = new $controllerRequest['controllerName']($this->server, $controllerRequest['pageTitle']);
+        $controller = new $controllerRequest['controllerName']($this->server, $controllerRequest['pageTitle'], $this);
         return $controller->render();
     }
 
-    private function Redirect() {
-        header('Status: 301 Moved Permanently', false, 301);
-        header('Location: /');
+    public function Redirect(string $location, int $code) {
+        header("Status: $code", false, $code);
+        header("Location: $location");
         die();
     }
 }
