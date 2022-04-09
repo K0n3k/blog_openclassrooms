@@ -1,14 +1,24 @@
 <?php
 
 namespace App\Models;
-use PDO;
 
 class LoginModel extends Model {
 
-    public function connectUser(string $username, $password) {
-        $statement = $this->pdo->prepare("SELECT * FROM users WHERE username='$username' AND password='$password'");
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_CLASS, "App\Entities\UserEntity");
+    protected $entity = "App\Entities\UserEntity";
+    
+    public function connectUser(string $email, string $password) {
+        
+        $user = $this->read("users", ["email" => $email]);
+        if(!empty($user) && password_verify($password, $user[0]->getPassword())) {
+            return $user[0];
+        }
+        return false;
     }
 
+    public function createUser(array $params) {
+        if(empty($this->read("users", ["email" => $params["email"]], ["email"]))) {
+            return $this->create("users", $params);
+        }
+        return false;
+    }
 }

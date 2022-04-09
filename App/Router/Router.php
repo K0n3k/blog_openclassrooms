@@ -34,13 +34,17 @@ Class Router {
                 'controllerName' => 'App\Controllers\LoginController',
                 'pageTitle' => 'Login',
             ],
+            'logout' => [
+                'controllerName' => 'App\Controllers\LogoutController',
+                'pageTitle' => 'Logout',
+            ],
+            'profile' => [
+                'controllerName' => 'App\Controllers\ProfileController',
+                'pageTitle' => 'Profile',
+            ],
             'registration' => [
                 'controllerName' => 'App\Controllers\RegistrationsController',
                 'pageTitle' => 'Registration',
-            ],
-            'admin' => [
-                'controllerName' => 'App\Controllers\AdminsController',
-                'pageTitle' => 'Administration',
             ],
             'userlist' => [
                 'controllerName' => 'App\Controllers\UserlistController',
@@ -68,8 +72,14 @@ Class Router {
         return $controller->render();
     }
 
-    public function Redirect(string $location, int $code) {
-        header("Status: $code", false, $code);
+    public function redirect(string $location, int $code) {
+        $codeMatched = match($code) {
+            301 => "301 moved permanently",
+            302 => "302 moved temporarly",
+            403 => "403 Forbidden",
+            404 => "404 Not found"
+        };
+        header("Status: $codeMatched", false, $code);
         header("Location: $location");
         die();
     }

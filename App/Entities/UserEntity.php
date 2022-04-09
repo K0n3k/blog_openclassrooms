@@ -7,7 +7,6 @@ class UserEntity {
     private int $id;
     private string $email;
     private string $password;
-    private string $username;
     private string $firstname;
     private string $lastname;
     private bool $isAdmin;
@@ -69,26 +68,6 @@ class UserEntity {
     public function setPassword($password)
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of username
-     */ 
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Set the value of username
-     *
-     * @return  self
-     */ 
-    public function setUsername($username)
-    {
-        $this->username = $username;
 
         return $this;
     }
