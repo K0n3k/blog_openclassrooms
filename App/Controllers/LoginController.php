@@ -38,7 +38,7 @@ class LoginController extends Controller
         if (isset($_SESSION["user"])) {
             $this->router->redirect("/", "302");
         } else {
-            $_SESSION = array();
+            session_unset();
             session_destroy();
             echo $this->twig->render('Login.twig', ["errorLogin" => $errorLogin, "emptyField" => $emptyField]);
         }
