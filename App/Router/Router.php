@@ -11,13 +11,10 @@ Class Router {
         if(!empty($post)) {
             $this->server["parameters"] = $post;
         }
-        if(array_key_exists("PATH_INFO", $server)) {
-            $this->server["PATH_INFO"] = $_SERVER["REQUEST_URI"];
-        }
 
 
         if(array_key_exists("PATH_INFO", $server) && $server["REQUEST_URI"] !== $server["PATH_INFO"]) {
-            $this->server["url"] = ["404"];
+            $this->redirect("/", 301);
         } else {
             $this->server["url"] = array_filter(explode('/', ltrim($server["REQUEST_URI"],"/")), 'strlen');
         }
