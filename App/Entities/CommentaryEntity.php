@@ -7,9 +7,8 @@ class commentaryEntity {
 
     private int $id;
     private int $idBlogpost;
-    private ?int $idUser;
-    private ?string $firstname;
-    private ?string $lastname;
+    private string $firstname;
+    private string $lastname;
     private string $commentary;
     private string $date;
     private bool $isValidated;
@@ -51,26 +50,6 @@ class commentaryEntity {
     public function setIdBlogpost($idBlogpost)
     {
         $this->idBlogpost = $idBlogpost;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of idUser
-     */ 
-    public function getIdUser()
-    {
-        return $this->idUser;
-    }
-
-    /**
-     * Set the value of idUser
-     *
-     * @return  self
-     */ 
-    public function setIdUser($idUser)
-    {
-        $this->idUser = $idUser;
 
         return $this;
     }

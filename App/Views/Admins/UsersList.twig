@@ -16,11 +16,35 @@
 	{% for user in users %}
     <tr>
         <td> {{ user.id }} </td>
-        <td> <input type="email" class="form-control" id="email" placeholder="{{ user.email }}"> </td>
-        <td> <input type="email" class="form-control" id="password" placeholder="{{ user.password }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ user.firstname }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ user.lastname }}"> </td>
-        <td> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" {% if user.isAdmin == true %}checked {% endif %}> </td>
+        <td>
+            <div class="form-floating mb-1">
+                <input type="email" class="form-control" id="floatingInput" name="email">
+                <label for="floatingInput">{{ user.email }}</label>
+            </div>
+        </td>
+        <td>
+            <div class="form-floating mb-1">
+				<input type="password" class="form-control" id="floatingPassword" name="password">
+				<label for="floatingPassword">Password</label>
+			</div>
+        </td>
+        <td>
+            <div class="form-floating mb-1">
+				<input type="text" class="form-control" id="floatingInput" name="firstname">
+				<label for="floatingInput">{{ user.firstname }}</label>
+			</div>
+        </td>
+        <td>
+            <div class="form-floating mb-1">
+				<input type="text" class="form-control" id="floatingInput" name="lastname">
+				<label for="floatingInput">{{ user.lastname }}</label>
+			</div>
+        </td>
+        <td> 
+            <div class="form-check form-switch">
+                 <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"{% if user.isAdmin == true %}checked {% endif %}>
+            </div>
+        </td>
         <td>
         <div class="btn-group">
 

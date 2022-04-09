@@ -1,3 +1,15 @@
 {% block main %}
-	coucou
+	{% for post in posts  %}
+	<div class="card row mb-3">
+		<div class="card-header">
+		{{ post.title }}
+		</div>
+		<div class="card-body">
+		{{ post.content }}
+		</div>
+		<div class="card-footer">
+			{{ post.publishedDate }} par {{ post.firstname }} {{ post.lastname }}
+		</div>
+	</div>
+	{% endfor %}
 {% endblock %}

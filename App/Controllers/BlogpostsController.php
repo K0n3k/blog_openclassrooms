@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\BlogpostListModel;
 
-final class BlogpostsController extends Controller {
-
+class BlogpostsController extends Controller {
+    protected $entity = "App\Entities\CommentaryEntity";
+    
     public function render() {
-        echo $this->twig->render('Posts.twig', ["activeLink" => "blog"]);
+        $blogpostList = new BlogpostListModel();
+        echo $this->twig->render('Posts.twig', [
+            "posts" => $blogpostList->getBlogPostListPublished(),
+        ]);
     }
 }

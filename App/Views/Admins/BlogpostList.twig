@@ -5,11 +5,10 @@
 <thead>
 <tr>
         <th scope="col"> id </td>
-        <th scope="col"> idAuthor </td>
+        <th scope="col"> Author </td>
         <th scope="col"> title </td>
         <th scope="col"> slug </td>
         <th scope="col"> chapo </td>
-        <th scope="col"> content </td>
         <th scope="col"> publishedDate </td>
         <th scope="col"> lastUpdate </td>
         <th scope="col"> isPublished </td>
@@ -19,14 +18,17 @@
 	{% for post in posts %}
     <tr>
         <td> {{ post.id }} </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.idAuthor }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.title }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.slug }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.chapo }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.content }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.publishedDate }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.lastUpdate }}"> </td>
-        <td> <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.isPublished }}"> </td>
+        <td> {{ post.firstname }} {{ post.lastname }} </td>
+        <td> {{ post.title }} </td>
+        <td> {{ post.slug }} </td>
+        <td> {{ post.chapo }} </td>
+        <td> {{ post.publishedDate }} </td>
+        <td> {{ post.lastUpdate }} </td>
+        <td>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"{% if post.isPublished == true %}checked {% endif %}>
+            </div>
+        </td>
     </tr>
 	{% endfor %}
     </tbody>
