@@ -6,8 +6,16 @@ Class Router {
     
     private array $server;
 
-    public function __construct(array $server)
+    public function __construct(array $server, array $post)
     {
+        if(!empty($post)) {
+            $this->server["parameters"] = $post;
+        }
+        if(array_key_exists("PATH_INFO", $server)) {
+            $this->server["PATH_INFO"] = $_SERVER["REQUEST_URI"];
+        }
+
+
         if(array_key_exists("PATH_INFO", $server) && $server["REQUEST_URI"] !== $server["PATH_INFO"]) {
             $this->server["url"] = ["404"];
         } else {
@@ -16,9 +24,6 @@ Class Router {
         if(!array_key_exists(0,$this->server["url"])) {
             // aucun paramètre dans l'url
             $this->server["url"] = ["/"] ;
-        }
-        if(array_key_exists("PARAMETERS", $server)) {
-            $this->server["parameters"] = $server["PARAMETERS"];
         }
     }
 

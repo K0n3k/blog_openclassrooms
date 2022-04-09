@@ -21,7 +21,7 @@ class Model {
     public function read(string $table, ?array $parameters = null, ?array $fields = ["*"]) {
         $query = "SELECT ".implode(",", $fields)." FROM $table";
                 
-        if(!is_null($parameters)) {
+        if($parameters !== null) {
             $query .= " WHERE ";
             foreach($parameters as $key => $parameter) {
                 $query .= "$key = '$parameter'";
