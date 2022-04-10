@@ -17,4 +17,23 @@ class UserlistModel extends Model {
         return $this->update("users",["id" => $id], ["isAdmin" => $isAdmin]);
     }
 
+    public function changeUserValues(int $id, array $values) {
+        if(!empty($values["email"])) {
+            $sets["email"] = $values["email"];
+        }
+        if(!empty($values["password"])) {
+            $sets["password"] = password_hash($values["password"], null);
+        }
+        if(!empty($values["firstname"])) {
+            $sets["firstname"] = $values["firstname"];
+        }
+        if(!empty($values["lastname"])) {
+            $sets["lastname"] = $values["lastname"];
+        }
+        if(empty($sets)) {
+            return false;
+        }
+        return $this->update("users",["id" => $id], $sets);
+    }
+    
 }

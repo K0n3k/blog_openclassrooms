@@ -6,18 +6,15 @@ use App\Models\LoginModel;
 
 class LoginController extends Controller
 {
+
     public function render()
     {
         $errorLogin = false;
         $emptyField = false;
 
-        if (array_key_exists("parameters", $this->server)) {
-            foreach ($this->server["parameters"] as $param) {
-                if (empty($param)) {
-                    $emptyField = true;
-                }
-            }
-            if (!$emptyField) {
+        if ($this->isPostMethod()) {
+
+            if (!$this->emptyFields()) {
 
                 $login = new LoginModel();
 

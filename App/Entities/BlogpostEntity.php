@@ -81,7 +81,7 @@ class BlogpostEntity {
      */ 
     public function getSlug()
     {
-        return $this->slug;
+        return str_replace(" ", "-", $this->slug);
     }
 
     /**
@@ -91,7 +91,7 @@ class BlogpostEntity {
      */ 
     public function setSlug($slug)
     {
-        $this->slug = $slug;
+        $this->slug = str_replace(" ","-", $slug);
 
         return $this;
     }

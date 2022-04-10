@@ -45,12 +45,15 @@ class Model {
 
     public function update(string $table, array $parameters, array $sets) {
         $query = "UPDATE $table SET ";
-        foreach($sets as $keySet => $set) {
-            $query .= "$keySet = '$set'";
+        foreach($sets as $setKey => $set) {
+            $query .= "$setKey = '$set' ";
+            if ($setKey !== array_key_last($sets)) {
+                $query .= ", ";
+            }
         }
         
         if($parameters !== null) {
-            $query .= " WHERE ";
+            $query .= "WHERE ";
             foreach($parameters as $whereKey => $parameter) {
                 $query .= "$whereKey = '$parameter'";
                 if ($whereKey !== array_key_last($parameters)) {

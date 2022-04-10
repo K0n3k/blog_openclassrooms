@@ -5,7 +5,7 @@
 		{{ post.title }}
 		</div>
 		<div class="card-body">
-		{{ post.content }}
+		{{ post.content|raw }}
 		</div>
 		<div class="card-footer">
 			{{ post.publishedDate }} par {{ post.firstname }} {{ post.lastname }}

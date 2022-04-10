@@ -9,11 +9,15 @@
 
 		<title>{{ page_title }}</title>
 		<link rel="stylesheet" href="/Styles/bootstrap.min.css">
+		{% block addStylesheets %}{% endblock %}
 		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
 		<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon.png">
+		<script src="/Js/jquery.js"></script>
+		{% block ActivateChangeScript %}{% endblock %}
 	</head>
 
 	<body class="theme-dark container">
+{% block toast %}{% endblock %}
 		<div
 			class="grid-wrapper sidebar-bg bg1">
 
@@ -25,11 +29,11 @@
 
 			<!-- BOF MAIN -->
 			
-
+<div class="container">
 				<!-- BOF MAIN-BODY -->
 				{% block main %}{% endblock %}
 				<!-- EOF MAIN -->
-
+</div>
 		</div>
 		<!-- END WRAPPER -->
 

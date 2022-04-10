@@ -61,8 +61,12 @@ Class Router {
                 'pageTitle' => 'Commentary list',
             ],
             '404' => [
-                'controllerName' => 'App\Controllers\BlogpostsController',
+                'controllerName' => 'App\Controllers\PageNotFoundController',
                 'pageTitle' => 'Error 404',
+            ],
+            'posteditor' => [
+                'controllerName' => 'App\Controllers\PostEditorController',
+                'pageTitle' => 'Post editor',
             ],
             default => [
                 'controllerName' => 'App\Controllers\BlogpostsController',

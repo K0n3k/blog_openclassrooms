@@ -14,7 +14,7 @@
 <tbody>
 	{% for commentary in commentaries %}
     <tr>
-        <td> {{ commentary.title }} </td>
+        <td> <a class="nav-link" href="/posteditor/{{ commentary.idBlogpost }}/{{ commentary.slug|replace({' ' : '-'}) }}">{{ commentary.title }}</a> </td>
         <td> {{ commentary.firstname }} {{ commentary.lastname }} </td>
         <td> {{ commentary.commentary }} </td>
         <td> {{ commentary.date }} </td>

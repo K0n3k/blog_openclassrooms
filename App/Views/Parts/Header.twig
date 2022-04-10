@@ -4,13 +4,16 @@
 			<svg class="bi me-2" width="40" height="32">
 				<use xlink:href="#bootstrap"></use>
 			</svg>
-			<span class="fs-4">Blog</span>
+			<span class="fs-1">Blog</span>
 		</a>
 
 		<ul class="nav nav-pills">
 
 			{% if isConnected %}
 				{% if isAdmin %}
+					<li class="nav-item">
+						<a href="/posteditor" class="nav-link">Creer un article</a>
+					</li>
 					<div class="dropdown">
 					 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Administration</a>
 					 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">

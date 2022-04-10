@@ -16,11 +16,21 @@ class UserlistController extends Controller {
                         $userList->deleteUser($this->server["parameters"]["id"]);
                         $this->router->redirect("/userlist", "302");
                         break;
-                    case "update" :
+                    case "updateIsAdmin" :
                         $isAdmin = !$this->server["parameters"]["isAdmin"];
                         $userList->changeIsAdminUser($this->server["parameters"]["id"], $isAdmin);
                         $this->router->redirect("/userlist", 302);
                         break;
+                        case "updateUser" :
+                            $userList->changeUserValues($this->server["parameters"]["id"],
+                             [
+                                 "email" => $this->server["parameters"]["email"],
+                                 "password" => $this->server["parameters"]["password"],
+                                 "firstname" => $this->server["parameters"]["firstname"],
+                                 "lastname" => $this->server["parameters"]["lastname"],
+                             ]);
+                            $this->router->redirect("/userlist", 302);
+                            break;
                     default:
                         $this->router->redirect("/userlist", 302);
                         break;

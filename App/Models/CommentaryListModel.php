@@ -18,8 +18,12 @@ class CommentaryListModel extends Model {
             [
                 "commentary.*",
                 "blogpost.title",
+                "blogpost.slug",
             ]
         );
+    }
+    public function getCommentaryListForPost($postId) {
+        return $this->read("commentary", ["idBlogpost" => $postId]);
     }
 
     public function deleteCommentary(int $id) {
