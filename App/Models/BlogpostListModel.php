@@ -36,4 +36,11 @@ class BlogpostListModel extends Model {
             ]
             );
     }
+    public function deleteBlogpost(int $id) {
+        return $this->delete("blogpost", ["id" => $id]);
+    }
+
+    public function changeisPublishedBlogpost(int $id, int $isPublished) {
+        return $this->update("blogpost",["id" => $id], ["isPublished" => $isPublished]);
+    }
 }

@@ -43,20 +43,40 @@ class Model {
         return $statement->fetchAll(PDO::FETCH_CLASS, $this->entity);
     }
 
-    public function update() {
-
+    public function update(string $table, array $parameters, array $sets) {
+        $query = "UPDATE $table SET ";
+        foreach($sets as $keySet => $set) {
+            $query .= "$keySet = '$set'";
+        }
+        
+        if($parameters !== null) {
+            $query .= " WHERE ";
+            foreach($parameters as $whereKey => $parameter) {
+                $query .= "$whereKey = '$parameter'";
+                if ($whereKey !== array_key_last($parameters)) {
+                    $query .= " AND ";
+                }
+            }
+        }
+        //dd($query);
+        $statement = $this->pdo->prepare($query);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_CLASS, $this->entity);
     }
 
     public function delete(string $table, array $parameters = null) {
         $query = "DELETE FROM $table";
-        foreach($parameters as $key => $parameter) {
-            $query .= "$key = $parameter";
-            if ($key !== array_key_last($parameters)) {
-                $query .= " AND ";
+        if($parameters !== null) {
+            $query .= " WHERE ";
+            foreach($parameters as $key => $parameter) {
+                $query .= "$key = '$parameter'";
+                if ($key !== array_key_last($parameters)) {
+                    $query .= " AND ";
+                }
             }
         }
         $statement = $this->pdo->prepare($query);
-        $statement->execute();
+        return $statement->execute();
     }
 
 }

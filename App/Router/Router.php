@@ -52,7 +52,7 @@ Class Router {
                 'controllerName' => 'App\Controllers\UserlistController',
                 'pageTitle' => 'User list',
             ],
-            'blopostlist' => [
+            'blogpostlist' => [
                 'controllerName' => 'App\Controllers\BlogpostListController',
                 'pageTitle' => 'Blogpost list',
             ],

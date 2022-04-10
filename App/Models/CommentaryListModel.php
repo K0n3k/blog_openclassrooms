@@ -7,6 +7,26 @@ class CommentaryListModel extends Model {
     protected $entity = "App\Entities\CommentaryEntity";
 
     public function getCommentaryList() {
-        return $this->read("commentary");
+        return $this->read(
+            [
+                "commentary",
+                "blogpost",
+            ],
+            [
+                "commentary.idBlogpost" => "blogpost.id",
+            ],
+            [
+                "commentary.*",
+                "blogpost.title",
+            ]
+        );
+    }
+
+    public function deleteCommentary(int $id) {
+        return $this->delete("commentary", ["id" => $id]);
+    }
+
+    public function changeisValidatedCommentary(int $id, int $isValidated) {
+        return $this->update("commentary",["id" => $id], ["isValidated" => $isValidated]);
     }
 }
