@@ -1,0 +1,21 @@
+  <div class="toast align-items-center text-white bg-{{ bgColor }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true" id="{{ toastKey }}">
+  <div class="d-flex">
+    <div class="toast-body">
+      {{ toastContent }}
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" id="closeButton"></button>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    var btn = document.getElementById("closeButton");
+    var element = document.getElementById("{{ toastKey }}");
+
+    // Create toast instance
+    var myToast = new bootstrap.Toast(element);
+
+    btn.addEventListener("click", function(){
+        myToast.show();
+    });
+});
+</script>

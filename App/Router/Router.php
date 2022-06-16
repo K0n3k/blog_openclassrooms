@@ -2,36 +2,42 @@
 
 namespace App\Router;
 
-Class Router {
-    
-    private array $server;
+class Router {
 
     public function __construct(array $server, array $post)
     {
-        if(!empty($post)) {
-            $this->server["parameters"] = $post;
+        $parameters["method"] = $server["REQUEST_METHOD"] ;
+        !empty($post) ? $parameters["post"] = $post : false;
+        
+        $url = array_filter(explode('/', ltrim($server["REQUEST_URI"],"/")), 'strlen');
+
+        if($server["REQUEST_URI"] !== "/") {
+            // redirections dans le cas où les urls sont manipulées
+            $server["PHP_SELF"] !== $server["SCRIPT_NAME"].$server["REQUEST_URI"] ? Router::redirect(404) : false;     
+            isset($server["PATH_INFO"]) && $server["PATH_INFO"] !== $server["REQUEST_URI"] ? Router::redirect(404) : false;
         }
 
-
-        if(array_key_exists("PATH_INFO", $server) && $server["REQUEST_URI"] !== $server["PATH_INFO"]) {
-            $this->redirect("/", 301);
-        } else {
-            $this->server["url"] = array_filter(explode('/', ltrim($server["REQUEST_URI"],"/")), 'strlen');
-        }
-        if(!array_key_exists(0,$this->server["url"])) {
-            // aucun paramètre dans l'url
-            $this->server["url"] = ["/"] ;
-        }
+        isset($url[0]) ? $parameters["url"]["path"] = $url[0] : $parameters["url"]["path"] = "/";
+        isset($url[1]) ? $parameters["url"]["postId"] = $url[1] : false;
+        isset($url[2]) ? $parameters["url"]["slug"] = $url[2] : false;
+        
+        $controllerRequest = $this->matchPath($parameters["url"]["path"]);
+        
+        isset($controllerRequest["pageTitle"]) ? $parameters["pageTitle"] = $controllerRequest["pageTitle"] : false;
+        $controller = new $controllerRequest["controllerName"]($parameters);
+        return $controller;
     }
-
-    public function setParams($params) {
-
-    }
-
-    public function reachRoute()
-    {
-
-        $controllerRequest = match(strtolower($this->server["url"][0])) {
+    
+    private function matchPath($path) {
+        return match(strtolower($path)) {
+            'blog' => [
+                'controllerName' => 'App\Controllers\PostController',
+                'pageTitle' => 'Blog',
+            ],
+            'contact' => [
+                'controllerName' => 'App\Controllers\ContactController',
+                'pageTitle' => 'Contactez nous',
+            ],
             'login' => [
                 'controllerName' => 'App\Controllers\LoginController',
                 'pageTitle' => 'Login',
@@ -45,48 +51,53 @@ Class Router {
                 'pageTitle' => 'Profile',
             ],
             'registration' => [
-                'controllerName' => 'App\Controllers\RegistrationsController',
+                'controllerName' => 'App\Controllers\RegistrationController',
                 'pageTitle' => 'Registration',
             ],
             'userlist' => [
-                'controllerName' => 'App\Controllers\UserlistController',
+                'controllerName' => 'App\Controllers\UsersListController',
                 'pageTitle' => 'User list',
             ],
-            'blogpostlist' => [
-                'controllerName' => 'App\Controllers\BlogpostListController',
+            'postlist' => [
+                'controllerName' => 'App\Controllers\PostsListController',
                 'pageTitle' => 'Blogpost list',
             ],
             'commentarylist' => [
-                'controllerName' => 'App\Controllers\CommentaryListController',
+                'controllerName' => 'App\Controllers\CommentarysListController',
                 'pageTitle' => 'Commentary list',
             ],
-            '404' => [
-                'controllerName' => 'App\Controllers\PageNotFoundController',
-                'pageTitle' => 'Error 404',
+            '/' => [
+                'controllerName' => 'App\Controllers\PostListPublishedController',
+                'pageTitle' => 'Blog',
+            ],
+            'forbidden' => [
+                'controllerName' => 'App\Controllers\ForbiddenController',
+                'pageTitle' => 'Error 403',
             ],
             'posteditor' => [
                 'controllerName' => 'App\Controllers\PostEditorController',
                 'pageTitle' => 'Post editor',
             ],
             default => [
-                'controllerName' => 'App\Controllers\BlogpostsController',
-                'pageTitle' => 'Blog',
+                'controllerName' => 'App\Controllers\NotFoundController',
+                'pageTitle' => 'Error 404',
             ],
         };
-
-        $controller = new $controllerRequest['controllerName']($this->server, $controllerRequest['pageTitle'], $this);
-        return $controller->render();
     }
 
-    public function redirect(string $location, int $code) {
-        $codeMatched = match($code) {
-            301 => "301 moved permanently",
-            302 => "302 moved temporarly",
-            403 => "403 Forbidden",
-            404 => "404 Not found"
+    public static function redirect(int $code, string $location = null) 
+    {
+        $matchedCode = match($code) {
+            301 => "Redirection permanente",
+            302 => "Redirection temporaire",
+            401 => "Utilisateur non authentifie",
+            403 => "Acces refuse",
+            404 => "Page introuvable",
         };
-        header("Status: $codeMatched", false, $code);
-        header("Location: $location");
-        die();
+
+        header("Status: $code $matchedCode", false, $code);
+        header("Location: /$location");
+        exit();
     }
+    
 }

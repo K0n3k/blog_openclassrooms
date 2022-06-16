@@ -2,46 +2,45 @@
 
 namespace App\Controllers;
 
-use App\MySession\MySession;
+use App\Sessions\Sessions;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 class Controller {
+    
+    protected Environment $twig;
+    protected string $twigFile;
 
-    protected $twig;
-    protected MySession $mySession;
-
-    public function __construct(protected array $server, string $page_title, protected $router){
-        //$this->mySession = new MySession();
-        $isConnected = false;
-        $isAdmin = false;
-
+    public function __construct(protected array $parameters)
+    {
         $loader = new FilesystemLoader(dirname(__DIR__).DIRECTORY_SEPARATOR.'Views'.DIRECTORY_SEPARATOR);
         $this->twig = new Environment($loader);
 
-        session_start();
-
-        if(!empty($_SESSION)) {
-            $isConnected = true;
-            $isAdmin = $_SESSION["user"]->getIsAdmin();
-        }
-        echo $this->twig->render('Layout.twig',["page_title" => $page_title, "isConnected" => $isConnected, "isAdmin" => $isAdmin]);
-    }
-
-    public function render() {
-    }
-
-    protected function emptyFields() {
-        foreach ($this->server["parameters"] as $param) {
-            if (empty($param)) {
-                return true;
+        Sessions::session_start();
+        if($this->parameters["method"] === "GET") {
+            $toasts = Sessions::getToast();
+            //dump($toasts);
+            if($toasts) {
+                $this->parameters["toasts"] = $toasts;
             }
+            //dump($this->parameters);
+            }
+            //echo $toasts;
+        $user = Sessions::getUser();
+        !$user ? $this->twig->addGlobal("user", null) : $this->twig->addGlobal("user", $user);
+    }
+
+    protected function render(string $twigFile, array $variables = null) {
+        $parameters = $this->parameters;
+        //dd($variables);
+        if(!is_null($variables)) {
+                $parameters += $variables;
         }
-        return false;
+            
+        echo $this->twig->render($twigFile, $parameters);
     }
 
-    protected function isPostMethod() {
-        return array_key_exists("parameters", $this->server) ? true : false;
+    protected function cleanData(string $data) : string {
+        return htmlentities($data);
     }
-
 }

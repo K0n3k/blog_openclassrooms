@@ -1,82 +1,117 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\BlogpostListModel;
-use App\Models\CommentaryListModel;
+
+use App\Entitys\PostEntity;
+use App\Enums\PostFields;
+use App\Models\PostsModel;
+use App\Models\CommentarysModel;
+use App\Sessions\Sessions;
+use App\Router\Router;
+use App\Enums\Toasts;
 
 class PostEditorController extends Controller {
-    public function render() {
-        if(array_key_exists("user", $_SESSION) && $_SESSION["user"]->getIsAdmin()) {
-            $emptyField = false;
-            $blogpostList = new BlogpostListModel();
-            $commentaryList = new CommentaryListModel();
-            if (array_key_exists("parameters", $this->server)) {
-                switch($this->server["parameters"]["action"]) {
-                    case "updatePost" :
-                        unset($this->server["parameters"]["action"]);
-                        unset($this->server["parameters"]["files"]);
-                        foreach ($this->server["parameters"] as $paramkey => $param) {
-                            if (empty($param)) {
-                                unset($this->server["parameters"][$paramkey]);
-                            }
-                        }
-                        $id = 
-                        $blogpostList->updatePost($this->server["parameters"]);
-                        $this->router->redirect("/posteditor/" . $this->server["url"][1] . "/" . $this->server["url"][2], "302");
-                        break;
-                    case "createPost" :
-                        unset($this->server["parameters"]["action"]);
-                        unset($this->server["parameters"]["files"]);
-                        
-                        foreach ($this->server["parameters"] as $param) {
-                            if (empty($param)) {
-                                $emptyField = true;
-                            }
-                        }
-                        if(!$emptyField) {
-                        $this->server["parameters"]["slug"] = str_replace(" ", "-", $this->server["parameters"]["title"]);
-                        if(key_exists("isPublished", $this->server["parameters"])) {
-                            $this->server["parameters"]["isPublished"] = true;
-                        }
-                        //dd($this->server);
-                            $post = $blogpostList->createPost($this->server["parameters"]);
-                            $this->router->redirect("/posteditor/" . $post->getId() . "/" . str_replace(" ", "-",$post->getSlug()), "302");
-                        } 
-                            break;
-                    case "deleteCommentary" :
-                        $commentaryList->deleteCommentary($this->server["parameters"]["id"]);
-                        $this->router->redirect("/posteditor/" . $this->server["url"][1] . "/" . $this->server["url"][2], "302");
-                        break;
-                    case "updateIsValidated" :
-                        $isValidated = !$this->server["parameters"]["isValidated"];
-                        $commentaryList->changeisValidatedCommentary($this->server["parameters"]["id"], $isValidated);
-                        $this->router->redirect("/posteditor/" . $this->server["url"][1] . "/" . $this->server["url"][2], "302");
-                        break;
-                    default:
-                    $this->router->redirect("/posteditor/" . $this->server["url"][1] . "/" . $this->server["url"][2], "302");
-                        break;
-                }
-            }
 
-            if (array_key_exists("url", $this->server) && count($this->server["url"]) > 1) {
-                $post = $blogpostList->getPost($this->server["url"][1]);
-                if(empty($post)) {
-                    $this->router->redirect("/404", 404);
-                }
-            
-                if(
-                    (count($this->server["url"]) <= 2) ||
-                    (isset($this->server["url"][2]) && $this->server["url"][2] !== str_replace(" ", "-", $post->getSlug()))
-                    ) {
-                    $this->router->redirect("/posteditor/" . $post->getId() . "/" . str_replace(" ", "-", $post->getSlug()), 301);
-                }
-                //dd($commentaryList->getCommentaryListForPost($post->getId()));
-                echo $this->twig->render('Admins'. DIRECTORY_SEPARATOR . 'PostEditor.twig', ["post" => $post, "commentaries" => $commentaryList->getCommentaryListForPost($post->getId()), "idAuthor" => $_SESSION["user"]->getId()]);
-            } else {
-                echo $this->twig->render('Admins'. DIRECTORY_SEPARATOR . 'PostEditor.twig', ["idAuthor" => $_SESSION["user"]->getId(), "emptyField" => $emptyField]);
-            }
+    private PostsModel $blogpost;
+    private CommentarysModel $commentaryList;
+
+    public function __construct(protected array $parameters) {
+        parent::__construct($parameters);
+
+        $this->twigFile = 'Admin' . DIRECTORY_SEPARATOR . 'PostEditor.twig';
+        
+        if(!Sessions::getUser() || !Sessions::getUser()->getIsAdmin()) {
+            Router::redirect(301);
         } else {
-            $this->router->redirect("/", 302);
+            $this->blogpost = new PostsModel();
+            $this->commentaryList = new CommentarysModel();
+
+            $this->parameters["method"] === "GET" ? $this->getTreatment() : $this->postTreatment() ;
         }
     }
+
+    private function getTreatment() {
+        if(isset($this->parameters["url"]["postId"])) {
+            $this->parameters["blogpost"] = $this->blogpost->readPost($this->parameters["url"]["postId"]);
+            $this->parameters["blogpost"]->setContent(htmlspecialchars_decode($this->parameters['blogpost']->getContent()));
+            if($this->parameters["url"]["slug"] !== str_replace(" ", "-",$this->parameters["blogpost"]->getSlug())) {
+                Router::redirect(301, $this->parameters["url"]["path"]."/".$this->parameters["blogpost"]->getId()."/".str_replace(" ", "-",$this->parameters["blogpost"]->getSlug()));
+            }
+            $this->parameters["commentaries"] = $this->commentaryList->readPostCommentaryList($this->parameters["url"]["postId"]);
+        }
+        $this->render($this->twigFile);
+    }
+
+    private function postTreatment() {
+        switch($this->parameters["post"]["action"]) {
+            case "updatePost":
+
+                if (
+                    empty($this->parameters["post"][PostFields::title->name]) &&
+                    empty($this->parameters["post"][PostFields::chapo->name]) &&
+                    empty($this->parameters["post"][PostFields::content->name])
+                ) {
+                    Sessions::addToast(Toasts::PostFieldsEmpty);
+                } else { 
+                    $post = new PostEntity();
+                    $post->setId($this->parameters["url"]["postId"]);
+                    $post->setTitle($this->parameters["post"]["title"]);
+                    $post->setSlug($this->cleanData(str_replace(" ", "-", $post->getTitle())));
+                    if (isset($this->parameters["post"]["isPublished"])) {
+                        $post->setIsPublished((int)true);
+                        Sessions::addToast(Toasts::PostPublished);
+                    } else {
+                        $post->setIsPublished((int)false);
+                    }
+                    $post->setChapo($this->cleanData($this->parameters['post']['chapo']));
+                    $post->setContent($this->cleanData($this->parameters['post']['content']));
+
+                    $this->parameters["blogpost"] = $this->blogpost->updatePost($post);
+                    Sessions::addToast(Toasts::PostModified);
+                }
+                break;
+                case "createPost":
+                    unset($this->parameters["post"]["action"]);
+                    unset($this->parameters["post"]["files"]);
+                    $post = new PostEntity();
+                    $post->setIdAuthor(Sessions::getUser()->getId());
+                    
+                    foreach($this->parameters["post"] as $postValue) {
+                        if(empty($postValue))  {
+                            Sessions::addToast(Toasts::AllFieldsMustBeFilled);
+                            //dump($this->parameters, $postValue);
+                            Router::redirect(301, $this->parameters["url"]["path"]);
+                        }
+                    }
+                $post->setTitle($this->cleanData($this->parameters['post']['title']));
+                $post->setSlug($this->cleanData(str_replace(" ", "-", $post->getTitle())));
+                
+                if (isset($this->parameters["post"]["isPublished"])) {
+                    $post->setIsPublished((int)true);
+                    Sessions::addToast(Toasts::PostPublished);
+                } else {
+                    $post->setIsPublished((int)false);
+                }
+                $post->setChapo($this->cleanData($this->parameters['post']['chapo']));
+                $post->setContent($this->cleanData($this->parameters['post']['content']));
+                
+                $createdBlogpost = $this->blogpost->readPost($this->blogpost->createPost($post));
+                Sessions::addToast(Toasts::PostCreated);
+                Router::redirect(301, $this->parameters["url"]["path"]."/".$createdBlogpost->getId()."/".str_replace(" ", "-", $createdBlogpost->getSlug()));
+                break;
+            case "deleteCommentary":
+                $this->commentaryList->deleteCommentary($this->parameters["post"]["id"]);
+                Sessions::addToast(Toasts::CommentaryDeleted);
+                break;
+            case "updateIsValidated":
+                empty($this->parameters["post"]["isValidated"]) ? $isValidated = true : $isValidated = false;
+                $this->commentaryList->updateCommentaryIsValidated($this->parameters["post"]["id"], $isValidated);
+                $isValidated ? Sessions::addToast(Toasts::CommentaryValidated) : Sessions::addToast(Toasts::CommentaryUnValidated);
+                break;
+            default:
+                break;
+        }
+        Router::redirect(302, implode("/",$this->parameters["url"]));
+    }
+
 }

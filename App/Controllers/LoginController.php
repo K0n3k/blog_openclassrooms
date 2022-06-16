@@ -2,44 +2,47 @@
 
 namespace App\Controllers;
 
-use App\Models\LoginModel;
+use App\Enums\UserFields;
+use App\Enums\Toasts;
+use App\Router\Router;
+use App\Models\UsersModel;
+use App\Sessions\Sessions;
 
-class LoginController extends Controller
-{
+class LoginController extends Controller {
 
-    public function render()
-    {
-        $errorLogin = false;
-        $emptyField = false;
+    private UsersModel $usersModel;
 
-        if ($this->isPostMethod()) {
+    public function __construct(protected array $parameters) {
+        parent::__construct($parameters);
+        
+        $this->twigFile = 'Public' . DIRECTORY_SEPARATOR . 'Login.twig';
+        $this->parameters["method"] === "GET" ? $this->getTreatment() : $this->postTreatment() ;
+        //dd($this->parameters);
+    }
 
-            if (!$this->emptyFields()) {
-
-                $login = new LoginModel();
-
-                $user = $login->connectUser(
-                    $this->server["parameters"]["username"],
-                    $this->server["parameters"]["password"]
-                );
-                if (!$user) {
-                    $errorLogin = true;
-                } else {
-                    if (!isset($_SESSION["user"])) {
-                        $_SESSION["user"] = $user;
-                    }
-                }
+    private function getTreatment() {
+        if(!Sessions::getUser()) {
+            return $this->render($this->twigFile);
+        } else {
+            Router::redirect(302) ;
+        }
+    }
+    
+    private function postTreatment() : void {
+        if(empty($this->parameters["post"][UserFields::email->name]) || empty($this->parameters["post"][UserFields::password->name])) {
+            Sessions::addToast(Toasts::AllFieldsMustBeFilled);
+            Router::redirect(302, $this->parameters["url"]["path"]);
+        } else {
+            $this->usersModel = new UsersModel();
+            $user = $this->usersModel->connectUser($this->parameters["post"][UserFields::email->name], $this->parameters["post"][UserFields::password->name]);
+            if(!$user) {
+                Sessions::addToast(Toasts::IncorrectEmailOrPassword);
+                Router::redirect(302, $this->parameters["url"]["path"]);
+            } else {
+                Sessions::setUser($user);
+                Sessions::addToast(Toasts::UserConnected);
+                Router::redirect(302);
             }
         }
-
-        if (isset($_SESSION["user"])) {
-            $this->router->redirect("/", "302");
-        } else {
-            session_unset();
-            session_destroy();
-            echo $this->twig->render('Login.twig', ["errorLogin" => $errorLogin, "emptyField" => $emptyField]);
-        }
-        //echo $this->twig->render('Login.twig', ["errorLogin" => $errorLogin]);
-
     }
 }

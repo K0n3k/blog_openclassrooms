@@ -2,11 +2,19 @@
     "name": "konek/code",
     "require": {
         "twig/twig": "^3.3",
-        "symfony/dotenv": "^6.0"
+        "symfony/dotenv": "^6.0",
+        "symfony/mailer": "^6.1"
     },
     "autoload": {
         "psr-4": {
-            "App\\" : "App/"
+            "App\\" : "App/",
+            "App\\Router\\" : "App/Router",
+            "App\\Controllers\\" : "App/Controllers",
+            "App\\Models\\" : "App/Models",
+            "App\\Sessions\\" : "App/Sessions",
+            "App\\Enums\\" : "App/Enums",
+            "App\\Interfaces" : "App/Interfaces",
+            "App\\Entitys\\" : "App/Entitys"
         }
     },
     "require-dev": {

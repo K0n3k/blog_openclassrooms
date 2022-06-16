@@ -8,36 +8,41 @@
 		<meta name="viewport" content="width=device-width"/>
 
 		<title>{{ page_title }}</title>
-		<link rel="stylesheet" href="/Styles/bootstrap.min.css">
-		{% block addStylesheets %}{% endblock %}
+		<link rel="stylesheet" href="/Styles/Css/bootstrap.min.css">
+		{% block styleSheet %}{% endblock %}
 		<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
 		<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon.png">
 		<script src="/Js/jquery.js"></script>
-		{% block ActivateChangeScript %}{% endblock %}
+		{% block scripts %}{% endblock %}
 	</head>
 
-	<body class="theme-dark container">
-{% block toast %}{% endblock %}
-		<div
-			class="grid-wrapper sidebar-bg bg1">
+	<body class="theme-dark">
+	<div aria-live="polite" aria-atomic="true" class="position-relative">
+		<div class="toast-container position-absolute p-3 top-50 end-0" id="toastPlacement" data-original-class="toast-container position-absolute p-3">
+			{% if toasts is defined %}
+				{% for toastKey, toast in toasts %}
+					{% include "/Toasts/" ~ toast ~ ".twig" %}
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="container">
 
 			<!-- BOF HEADER -->
 			{% block header %}
-				{% include 'Parts/header.twig' %}
+				{% include 'Parts/Header.twig' %}
 			{% endblock %}
 			<!-- EOF HEADER -->
-
-			<!-- BOF MAIN -->
 			
-<div class="container">
-				<!-- BOF MAIN-BODY -->
-				{% block main %}{% endblock %}
-				<!-- EOF MAIN -->
-</div>
-		</div>
+			<!-- BOF MAIN-BODY -->
+			<div class="container justify-content-center">
+			{% block main %}{% endblock %}
+			</div>
+			<!-- EOF MAIN -->
 		<!-- END WRAPPER -->
+	</div>
+
 
 		<script src="/Js/bootstrap.bundle.min.js"></script>
 	</body>
-
 </html>

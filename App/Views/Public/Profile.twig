@@ -1,0 +1,29 @@
+{% extends "Layout.twig" %}
+{% block main %}
+<div class="container">
+<div style="width: 25rem; justify-content: center" class="">
+    <form action="/{{ url.path }}" method="post">
+        <h1 class="h3 mb-3 fw-normal">Modifier mon compte</h1>
+        <div class="form-floating mb-1">
+            <input type="email" class="form-control" id="floatingInput" name="email">
+            <label for="floatingInput">{{ user.email }}</label>
+        </div>
+        <div class="form-floating mb-1">
+            <input type="text" class="form-control" id="floatingInput" name="firstname">
+            <label for="floatingInput">{{ user.firstname }}</label>
+        </div>
+        <div class="form-floating mb-1">
+            <input type="text" class="form-control" id="floatingInput" name="lastname">
+            <label for="floatingInput">{{ user.lastname }}</label>
+        </div>
+        <div class="form-floating mb-1">
+            <input type="password" class="form-control" id="floatingPassword" name="password">
+            <label for="floatingPassword">Password</label>
+        </div>
+        
+        <input name="action" type="hidden" value="updateUser">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Modifier</button>
+    </form>
+</div>
+</div>
+{% endblock %}

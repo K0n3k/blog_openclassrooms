@@ -8,26 +8,29 @@
 		</a>
 
 		<ul class="nav nav-pills">
-
-			{% if isConnected %}
-				{% if isAdmin %}
+			<li class="nav-item">
+				<a href="/contact" class="nav-link">Nous contacter</a>
+			</li>
+			{% if user is not null %}
+				{% if user.isAdmin %}
 					<li class="nav-item">
 						<a href="/posteditor" class="nav-link">Creer un article</a>
 					</li>
 					<div class="dropdown">
 					 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Administration</a>
 					 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-						<li><a class="dropdown-item" href="/blogpostlist">Articles</a></li>
+						<li><a class="dropdown-item" href="/postlist">Articles</a></li>
 						<li><a class="dropdown-item" href="/commentarylist">Commentaires</a></li>
 						<li><a class="dropdown-item" href="/userlist">Utilisateurs</a></li>
 					</ul>
 					</div>			
 				{% endif %}
-				<li class="nav-item">
-					<a href="/profile" class="nav-link">Profil</a>
-				</li>
-				<li class="nav-item">
-					<a href="/logout" class="nav-link">Déconnexion</a>
+									<div class="dropdown">
+					 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ user.firstname }} {{ user.lastname }}</a>
+					 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+						<li><a href="/profile" class="nav-link">Profil</a></li>
+						<li><a href="/logout" class="nav-link">Déconnexion</a></li>
+					</ul>
 				</li>				
 			{% else %}
 				<li class="nav-item">

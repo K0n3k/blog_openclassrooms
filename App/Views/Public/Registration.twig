@@ -1,0 +1,30 @@
+{% extends "Layout.twig" %}
+{% block main %}
+<div class="container">
+<div style="width: 25rem; justify-content: center">
+		<div class="form-signin">
+			<form action="/{{ url.path }}" method="post">
+				<h1 class="h3 mb-3 fw-normal">Creer un compte</h1>
+				<div class="form-floating mb-1">
+					<input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+					<label for="floatingInput">Adresse email</label>
+				</div>
+				<div class="form-floating mb-1">
+					<input type="text" class="form-control" id="floatingInput" name="firstname" placeholder="Prénom">
+					<label for="floatingInput">Prénom</label>
+				</div>
+				<div class="form-floating mb-1">
+					<input type="text" class="form-control" id="floatingInput" name="lastname" placeholder="Nom">
+					<label for="floatingInput">Nom</label>
+				</div>
+				<div class="form-floating mb-1">
+					<input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+					<label for="floatingPassword">Password</label>
+				</div>
+
+				<button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

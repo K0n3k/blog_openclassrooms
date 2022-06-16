@@ -1,85 +1,72 @@
 <?php
 
 namespace App\Models;
+
+use App\Entitys\Entity;
 use PDO;
+use App\Enums\SqlOperators;
+use App\Enums\SqlTables;
 
 class Model {
     protected PDO $pdo;
+    protected string $query;
     protected $entity;
 
     public function __construct()
     {
-        $this->pdo = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
+        $this->pdo = new PDO('mysql:host='.$_ENV['DB_HOST'].';dbname='. $_ENV['DB_DATABASE'] .';charset=utf8', $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
     }
 
-    public function create(string $table, array $values) {
-        $statement = $this->pdo->prepare("INSERT INTO $table (" . implode(",", array_keys($values)) . ") VALUES ('" . implode("','", $values) ."')");
+    protected function insert(SqlTables $table, Entity $entity) {
+        $values = (array)$entity;
+        foreach($values as $key => $value) {
+            $values += [substr_replace($key,"",0,strpos($key,"\x00", 1)+1) => "'".$value."'"];
+            unset($values[$key]);
+        }
+        $this->query = "INSERT INTO $table->name (" . implode(",", array_keys($values)) . ") VALUES (" . implode(",", $values) .")" ;
+        $statement = $this->pdo->prepare($this->query);
+        $statement->execute();
+        unset($this->query);
+        return $this->pdo->lastInsertId();
+    }
+
+    protected function select(array $table, array $fields = ["*"]) : ?self {
+        $this->query = "SELECT " . implode(",", $fields) . " FROM " . implode(",", $table);
+        return $this;
+    }
+
+    protected function where(string $field, string $value,string $condition = "=", SqlOperators $operator = SqlOperators::AND) : ?self {
+        $operator === SqlOperators::AND ? $operator = SqlOperators::AND->name : $operator = SqlOperators::OR->name;
+        str_contains($this->query, "WHERE") ? $this->query .= " $operator $field $condition $value" : $this->query .= " WHERE $field $condition $value";
+        return $this;
+    }
+
+    protected function exec() : array|false {
+        $statement = $this->pdo->prepare($this->query);
         //dd($statement);
-        return $statement->execute();
-    }
-
-    public function read(string|array $table, ?array $parameters = null, ?array $fields = ["*"]) {
-        $quote = "";
-        $query = "SELECT ".implode(",", $fields)." FROM ";
-        if(is_array($table)) {
-            $query .= implode(",", $table) ;
-        } else {
-            $query .= $table ;
-            $quote = "'";
-        }
-                
-        if($parameters !== null) {
-            $query .= " WHERE ";
-            foreach($parameters as $key => $parameter) {
-                $query .= "$key = $quote$parameter$quote";
-                if ($key !== array_key_last($parameters)) {
-                    $query .= " AND ";
-                }
-            }
-        }
-        //dd($query);
-        $statement = $this->pdo->prepare($query);
         $statement->execute();
+        unset($this->query);
         return $statement->fetchAll(PDO::FETCH_CLASS, $this->entity);
     }
 
-    public function update(string $table, array $parameters, array $sets) {
-        $query = "UPDATE $table SET ";
+    protected function update(string $table, array $sets) : ?self {
+        $this->query = "UPDATE $table SET ";
         foreach($sets as $setKey => $set) {
-            $query .= "$setKey = '$set' ";
+            $this->query .= "$setKey = '$set' ";
             if ($setKey !== array_key_last($sets)) {
-                $query .= ", ";
+                $this->query .= ", ";
             }
         }
-        
-        if($parameters !== null) {
-            $query .= "WHERE ";
-            foreach($parameters as $whereKey => $parameter) {
-                $query .= "$whereKey = '$parameter'";
-                if ($whereKey !== array_key_last($parameters)) {
-                    $query .= " AND ";
-                }
-            }
-        }
-        //dd($query);
-        $statement = $this->pdo->prepare($query);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_CLASS, $this->entity);
+        return $this;
     }
 
-    public function delete(string $table, array $parameters = null) {
-        $query = "DELETE FROM $table";
-        if($parameters !== null) {
-            $query .= " WHERE ";
-            foreach($parameters as $key => $parameter) {
-                $query .= "$key = '$parameter'";
-                if ($key !== array_key_last($parameters)) {
-                    $query .= " AND ";
-                }
-            }
-        }
-        $statement = $this->pdo->prepare($query);
-        return $statement->execute();
+    protected function delete(string $table) : ?self {
+        $this->query = "DELETE FROM $table";
+        return $this;
+    }
+
+    protected function sortBy() {
+        return $this;
     }
 
 }

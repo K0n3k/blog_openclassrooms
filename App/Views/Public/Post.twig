@@ -1,0 +1,45 @@
+{% extends "layout.twig" %}
+{% block main %}
+
+<div class="container">
+<div class="mb-3">
+    <h1>{{ blogpost.title }}</h1>
+</div>
+<div>
+    {{ blogpost.content|raw }}
+</div>
+<div class="my-5">
+    publié le {{ blogpost.publishedDate }} par {{ blogpost.firstname }} {{ blogpost.lastname }}
+</div>
+<ul class="list-group">
+<div>
+<form action="/{{ url.path }}/{{ url.postId }}/{{ url.slug }}" method="post">
+{% if user is not defined %}
+<div class="mb-3 row">
+<div class="col">
+    <label for="firstname" class="form-label">Prénom</label><input type="text" name="firstname" class="form-control">
+</div>
+<div class="col">
+    <label for="lastname" class="form-label">Nom</label><input type="text" name="lastname" class="form-control">
+</div>
+</div>
+{% endif %}
+<div class="mb-3">
+<label for="commentary" class="form-label">Ajouter un Commentaire</label>
+<textarea name="commentary" class="form-control"></textarea>
+</div>
+<div class="mb-3">
+<button type="submit" class="btn btn-primary">Envoyer</button>
+</div>
+</form>
+</div>
+    {% for commentary in commentarylist %}
+        <li class="list-group-item">
+            <h4>{{ commentary.firstname }} {{ commentary.lastname }}</h4><br>
+            <p> Le {{ commentary.date }}<p>
+            <p> {{ commentary.commentary }}</p>
+        </li>
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}
