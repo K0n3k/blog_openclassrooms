@@ -85,7 +85,7 @@ class Router {
         };
     }
 
-    public static function redirect(int $code, string $location = null) 
+    public static function redirect(int $code, string $location = null): void 
     {
         $matchedCode = match($code) {
             301 => "Redirection permanente",
@@ -97,7 +97,7 @@ class Router {
 
         header("Status: $code $matchedCode", false, $code);
         header("Location: /$location");
-        exit();
+        return ;
     }
     
 }

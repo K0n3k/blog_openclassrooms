@@ -7,7 +7,7 @@ use App\Enums\Toasts;
 class Sessions {
     
     public static function setUser(UserEntity $user = null) {
-        if (is_null($user)) {
+        if ($user === null) {
             $_SESSION["user"] = new UserEntity();
             $_SESSION["user"]->setIsAdmin(false);
         } else {
