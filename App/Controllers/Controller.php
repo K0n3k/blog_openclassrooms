@@ -33,7 +33,7 @@ class Controller {
     protected function render(string $twigFile, array $variables = null) {
         $parameters = $this->parameters;
         //dd($variables);
-        if($variables === null) {
+        if($variables !== null) {
                 $parameters += $variables;
         }
             
