@@ -13,7 +13,7 @@ class Controller {
 
     public function __construct(protected array $parameters)
     {
-        $loader = new FilesystemLoader(dirname(__DIR__).DIRECTORY_SEPARATOR.'Views'.DIRECTORY_SEPARATOR);
+        $loader = new FilesystemLoader('..'.DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.'Views');
         $this->twig = new Environment($loader);
 
         Sessions::session_start();
