@@ -13,8 +13,9 @@
             "App\\Models\\" : "App/Models",
             "App\\Sessions\\" : "App/Sessions",
             "App\\Enums\\" : "App/Enums",
-            "App\\Interfaces" : "App/Interfaces",
-            "App\\Entitys\\" : "App/Entitys"
+            "App\\Interfaces\\" : "App/Interfaces",
+            "App\\Entitys\\" : "App/Entitys",
+            "App\\Services\\" : "App/Services"
         }
     },
     "require-dev": {

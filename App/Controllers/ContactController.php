@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Interfaces\TreatmentsInterface;
-
+use App\Services\MyMailer;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email; 
 class ContactController extends Controller implements TreatmentsInterface {
 
     public function __construct(protected array $parameters)
@@ -23,5 +25,11 @@ class ContactController extends Controller implements TreatmentsInterface {
     public function postTreatment(): void
     {
         // send email
+
+        $mail = new MyMailer(
+            new Address($this->cleanData($this->parameters['post']['emailAdress'])),
+            $this->cleanData($this->parameters['post']['subject']),
+            $this->cleanData($this->parameters['post']['content'])
+        );
     }
 }
