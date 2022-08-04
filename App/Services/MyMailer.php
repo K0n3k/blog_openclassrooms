@@ -14,7 +14,6 @@ class MyMailer {
         $transport = Transport::fromDsn($_ENV['MAILER_DSN']);
         $mailer = new Mailer($transport);
         $mailer->send($this->createEmail($cc, $subject, $content));
-        dd($mailer);
     }
 
     public function createEmail(Address $cc, string $subject, string $content) : email {

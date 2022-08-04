@@ -9,6 +9,7 @@ enum Toasts {
     case CommentaryUnValidated;
     case CommentaryValidated;
     case EmailAllreadyUsed;
+    case EmailSuccefullySended;
     case IncorrectEmailOrPassword;
     case PostCreated;
     case PostDeleted;

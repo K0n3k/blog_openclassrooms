@@ -2,8 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Enums\Toasts;
 use App\Interfaces\TreatmentsInterface;
+use App\Router\Router;
 use App\Services\MyMailer;
+use App\Sessions\Sessions;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email; 
 class ContactController extends Controller implements TreatmentsInterface {
@@ -31,5 +34,7 @@ class ContactController extends Controller implements TreatmentsInterface {
             $this->cleanData($this->parameters['post']['subject']),
             $this->cleanData($this->parameters['post']['content'])
         );
+        Sessions::addToast(Toasts::EmailSuccefullySended);
+        Router::redirect(301, $this->parameters['url']['path']);
     }
 }
