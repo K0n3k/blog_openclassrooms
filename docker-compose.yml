@@ -15,7 +15,7 @@ services:
 
     volumes:
       - ./:/var/www/project/
-      - ./apacheConf/conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./apacheConf/:/etc/apache2/sites-enabled/
 
   blogOpenClassroomsdB:
     image: mariadb
