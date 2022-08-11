@@ -6,7 +6,9 @@ services:
     image: php:8.1.7-apache
     container_name: blogOpenClassrooms
     command: 
-      - | 
+      - |
+        apt-update
+        apt install -yqq curl zip git  
         curl -sS https://getcomposer.org/installer | php
         mv composer.phar /usr/bin/composer
         chmod +x /usr/bin/composer
