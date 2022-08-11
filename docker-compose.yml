@@ -22,4 +22,4 @@ services:
     container_name: blogOpenClassroomsMariaDb
     
     environment:
-      - MARIADB_ROOT_PASSWORD=_FnPs6$
+      - MARIADB_ROOT_PASSWORD=_FnPs6i
