@@ -34,7 +34,7 @@ class PostController extends Controller {
         if(!$this->parameters["blogpost"]) {
             Router::redirect(404, "NotFound");
         }
-        $this->parameters["blogpost"]->setSlug(str_replace(" ", "-",$this->parameters["blogpost"]->getSlug()));
+        $this->parameters["blogpost"]->setSlug(str_replace(" ", "-",$this->parameters["blogpost"]->getTitle()));
         
         if($this->parameters["blogpost"]->getSlug() === $this->parameters["url"]["slug"]) {
             $this->render($this->twigFile);

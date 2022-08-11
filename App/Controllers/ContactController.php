@@ -30,9 +30,10 @@ class ContactController extends Controller implements TreatmentsInterface {
         // send email
 
         $mail = new MyMailer(
-            new Address($this->cleanData($this->parameters['post']['emailAdress'])),
-            $this->cleanData($this->parameters['post']['subject']),
-            $this->cleanData($this->parameters['post']['content'])
+            new Address(
+                $this->cleanData($this->parameters['post']['emailAdress'])),
+                $this->cleanData($this->parameters['post']['subject']),
+                $this->cleanData($this->parameters['post']['content'])
         );
         Sessions::addToast(Toasts::EmailSuccefullySended);
         Router::redirect(301, $this->parameters['url']['path']);
