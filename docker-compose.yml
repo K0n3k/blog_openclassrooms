@@ -14,7 +14,7 @@ services:
       - 3080:80
 
     volumes:
-      - ./:/var/www/project/Public
+      - ./:/var/www/project/
       - ./apacheConf/conf:/etc/apache2/sites-enabled/000-default.conf
 
   blogOpenClassroomsdB:
