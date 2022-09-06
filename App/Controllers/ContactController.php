@@ -8,7 +8,6 @@ use App\Router\Router;
 use App\Services\MyMailer;
 use App\Sessions\Sessions;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email; 
 class ContactController extends Controller implements TreatmentsInterface {
 
     public function __construct(protected array $parameters)

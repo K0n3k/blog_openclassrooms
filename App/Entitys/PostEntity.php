@@ -80,7 +80,7 @@ class PostEntity extends Entity {
      */ 
     public function getSlug()
     {
-        return $this->slug;
+        return str_replace(" ", "-",$this->title);
     }
 
     /**
