@@ -12,15 +12,30 @@ Blog project from openclassrooms formation (App dev PHP/Symfony)
 ## Pre-require
 
 * Git >= 2.35.1
-* php 
-* mysql or mariadb
-* apache
+* php >= 8.1
+* mariadb >= 10.7.3
+* apache >= 2.4
+* composer >= 2.1.12
 
 ## How to
 In a terminal (ex: bash / sh / xterm ...) :
 
+* Step 1
 ```shell
 gitclone git@github.com:K0n3k/blog_openclassrooms.git
 cd blog_openclassroms
-
+composer install
 ``` 
+* step 2
+
+    execute blog.sql
+
+* step 3
+
+    configure .ENV file
+
+* step 4
+
+    Go to your URL and connect as login : admin@admin password : admin
+
+    Click on top right corner "admin admin" => profile and change your password
