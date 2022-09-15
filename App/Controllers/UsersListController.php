@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Entitys\UserEntity;
 use App\Enums\Toasts;
 use App\Enums\UserFields;
 use App\Sessions\Sessions;
@@ -41,14 +42,14 @@ class UsersListController extends Controller {
 
             case 'updateUser':
                 //dd($this->parameters);
-                $this->userlist->updateUser(
-                    $this->parameters["post"]["id"],
-                    [
-                        UserFields::email->name => $this->cleanData($this->parameters["post"]["email"]),
-                        UserFields::password->name => $this->cleanData($this->parameters["post"]["password"]),
-                        UserFields::firstname->name => $this->cleanData($this->parameters["post"]["firstname"]),
-                        UserFields::lastname->name => $this->cleanData($this->parameters["post"]["lastname"]),
-                    ]);
+                $user = new UserEntity();
+                $user->setId($this->cleanData($this->parameters['post']['id']))
+                     ->setEmail($this->cleanData($this->parameters["post"]["email"]))
+                     ->setPassword($this->cleanData($this->parameters["post"]["password"]))
+                     ->setFirstname($this->cleanData($this->parameters["post"]["firstname"]))
+                     ->setLastname($this->cleanData($this->parameters["post"]["lastname"]));
+
+                $this->userlist->updateUser($user);
                 Sessions::addToast(Toasts::UserModified);
                 break;
 

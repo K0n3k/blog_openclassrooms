@@ -20,6 +20,11 @@ class PostController extends Controller {
         $blogpost = new PostsModel();
 
         $this->parameters["blogpost"] =  $blogpost->readPostPublished($this->parameters["url"]["postId"]);
+        
+        if (!$this->parameters["blogpost"]) {
+            Router::redirect(404);
+        }
+
         $this->parameters["blogpost"]->setContent(htmlspecialchars_decode($this->parameters["blogpost"]->getContent()));
         $this->parameters["commentarylist"] = $this->commentaryList->readCommentaryListValidated($this->parameters["url"]["postId"]);
 
@@ -28,8 +33,7 @@ class PostController extends Controller {
 
     private function getTreatment(): void {
         if(Sessions::getUser()) {
-            $this->parameters["user"]["firstname"] = Sessions::getUser()->getFirstname();
-            $this->parameters["user"]["lastname"] = Sessions::getUser()->getLastname();
+            $this->parameters["user"] = Sessions::getUser();
         }
         if(!$this->parameters["blogpost"]) {
             Router::redirect(404, "NotFound");

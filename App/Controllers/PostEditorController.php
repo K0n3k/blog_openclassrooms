@@ -56,7 +56,7 @@ class PostEditorController extends Controller {
                     $post = new PostEntity();
                     $post->setId($this->parameters["url"]["postId"]);
                     $post->setTitle($this->parameters["post"]["title"]);
-                    $post->setSlug($this->cleanData(str_replace(" ", "-", $post->getTitle())));
+                    //$post->setSlug($this->cleanData(str_replace(" ", "-", $post->getTitle())));
                     if (isset($this->parameters["post"]["isPublished"])) {
                         $post->setIsPublished((int)true);
                         Sessions::addToast(Toasts::PostPublished);
@@ -84,7 +84,7 @@ class PostEditorController extends Controller {
                         }
                     }
                 $post->setTitle($this->cleanData($this->parameters['post']['title']));
-                $post->setSlug($this->cleanData(str_replace(" ", "-", $post->getTitle())));
+                //$post->setSlug($this->cleanData(str_replace(" ", "-", $post->getTitle())));
                 
                 if (isset($this->parameters["post"]["isPublished"])) {
                     $post->setIsPublished((int)true);

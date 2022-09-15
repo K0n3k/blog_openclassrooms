@@ -52,7 +52,6 @@ class CommentarysModel extends Model {
         ],[
             SqlTables::commentary->name.".*",
             SqlTables::blogpost->name.".".PostFields::title->name,
-            SqlTables::blogpost->name.".".PostFields::slug->name,
         ])
         ->where(
             SqlTables::commentary->name.".".CommentaryFields::idBlogpost->name,

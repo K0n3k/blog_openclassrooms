@@ -14,7 +14,7 @@
 <ul class="list-group">
 <div>
 <form action="/{{ url.path }}/{{ url.postId }}/{{ url.slug }}" method="post">
-{% if user is not defined %}
+{% if user is null %}
 <div class="mb-3 row">
 <div class="col">
     <label for="firstname" class="form-label">Prénom</label><input type="text" name="firstname" class="form-control">
