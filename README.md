@@ -36,6 +36,6 @@ composer install
 
 * step 4
 
-    Go to your URL and connect as login : admin@admin password : admin
+    Go to your URL and connect as login : admin@admin.com password : admin
 
     Click on top right corner "admin admin" => profile and change your password
