@@ -22,7 +22,7 @@ In a terminal (ex: bash / sh / xterm ...) :
 
 * Step 1
 ```shell
-gitclone git@github.com:K0n3k/blog_openclassrooms.git
+git clone git@github.com:K0n3k/blog_openclassrooms.git
 cd blog_openclassroms
 composer install
 ``` 
