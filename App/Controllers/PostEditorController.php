@@ -97,7 +97,8 @@ class PostEditorController extends Controller {
                 
                 $createdBlogpost = $this->blogpost->readPost($this->blogpost->createPost($post));
                 Sessions::addToast(Toasts::PostCreated);
-                Router::redirect(301, $this->parameters["url"]["path"]."/".$createdBlogpost->getId()."/".str_replace(" ", "-", $createdBlogpost->getSlug()));
+                $RedirectedUrl = $this->parameters["url"]["path"]."/".$createdBlogpost->getId()."/".str_replace(" ", "-", $createdBlogpost->getSlug());
+                Router::redirect(301, $RedirectedUrl);
                 break;
             case "deleteCommentary":
                 $this->commentaryList->deleteCommentary($this->parameters["post"]["id"]);

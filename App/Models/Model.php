@@ -11,6 +11,7 @@ class Model {
     protected PDO $pdo;
     protected string $query;
     protected $entity;
+    protected $placeholder = [];
 
     public function __construct()
     {
@@ -19,14 +20,21 @@ class Model {
 
     protected function insert(SqlTables $table, Entity $entity) {
         $values = (array)$entity;
+        
         foreach($values as $key => $value) {
             $values += [substr_replace($key,"",0,strpos($key,"\x00", 1)+1) => "'".$value."'"];
+            $this->placeholder += [":".array_key_last($values) => $value];
             unset($values[$key]);
         }
-        $this->query = "INSERT INTO $table->name (" . implode(",", array_keys($values)) . ") VALUES (" . implode(",", $values) .")" ;
+        
+        $this->query = 'INSERT INTO '. $table->name.' (' . implode(',', array_keys($values)) . ') VALUES (' . implode(',', array_keys($this->placeholder)) .')' ;
         $statement = $this->pdo->prepare($this->query);
+        foreach($this->placeholder as $phKey => &$phValue) {
+            $statement->bindParam($phKey, $phValue);
+        }
         $statement->execute();
         unset($this->query);
+        unset($this->placeholder);
         return $this->pdo->lastInsertId();
     }
 
@@ -44,15 +52,20 @@ class Model {
     protected function exec() : array|false {
         $statement = $this->pdo->prepare($this->query);
         //dd($statement);
+        foreach($this->placeholder as $phKey => &$phValue) {
+            $statement->bindParam($phKey, $phValue);
+        }
         $statement->execute();
         unset($this->query);
+        unset($this->placeholder);
         return $statement->fetchAll(PDO::FETCH_CLASS, $this->entity);
     }
 
     protected function update(string $table, array $sets) : ?self {
         $this->query = "UPDATE $table SET ";
         foreach($sets as $setKey => $set) {
-            $this->query .= "$setKey = '$set' ";
+            $this->query .= "$setKey = :$setKey ";
+            $this->placeholder += [":".$setKey => $set];
             if ($setKey !== array_key_last($sets)) {
                 $this->query .= ", ";
             }
